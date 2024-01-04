@@ -1,7 +1,5 @@
 package com.fastcampus.ch4.domain;
 
-import com.fastcampus.ch4.dao.BoardDao;
-
 import java.util.Date;
 import java.util.Objects;
 

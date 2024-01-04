@@ -4,6 +4,11 @@
 
 <mapper namespace="com.fastcampus.ch4.dao.BoardMapper">
 
+    <select id="select" parameterType="int" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        WHERE bno = #{bno}
+    </select>
+
     <select id="count" resultType="int">
         SELECT count(*) FROM board
     </select>
@@ -34,13 +39,10 @@
         FROM board
     </sql>
 
-    <select id="select" parameterType="int" resultType="BoardDto">
-        <include refid="selectFromBoard"/>
-        WHERE bno = #{bno}
-    </select>
-
     <select id="selectPage" parameterType="map" resultType="BoardDto">
-        <include refid="selectFromBoard"/>
+<!--        <include refid="selectFromBoard"/>-->
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
         ORDER BY reg_date DESC, bno DESC
         LIMIT #{offset}, #{pageSize}
     </select>

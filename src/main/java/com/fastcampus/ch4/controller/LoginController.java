@@ -80,6 +80,9 @@ public class LoginController {
             return false;
         }
 
+        System.out.println("user = " + user);
+//        System.out.println("user.getPwd() = " + user.getPwd());
+
         return user!=null && user.getPwd().equals(pwd);
 //        return "asdf".equals(id) && "1234".equals(pwd);
     }
