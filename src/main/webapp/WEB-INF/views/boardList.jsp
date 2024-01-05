@@ -29,38 +29,27 @@
                 <th>등록일</th>
                 <th>조회수</th>
             </tr>
-            <c:forEach var="board" items="${list}">
+            <c:forEach var="boardDto" items="${list}">
                 <tr>
-                    <th>${board.bno}</th>
-                    <th>${board.title}</th>
-                    <th>${board.writer}</th>
-                    <th>${board.reg_date}</th>
-                    <th>${board.view_cnt}</th>
+                    <th>${boardDto.bno}</th>
+                    <th><a href="<c:url value='/boardDto/read?bno=${boardDto.bno}&page=${page}&pageSize=${pageSize}'/>">${boardDto.title}</a></th>
+                    <th>${boardDto.writer}</th>
+                    <th>${boardDto.reg_date}</th>
+                    <th>${boardDto.view_cnt}</th>s
                 </tr>
             </c:forEach>
         </table>
         <br>
         <div>
-<%--            <c:if test="${ph.showPrev}">--%>
-<%--                <a href ="<c:url value='/board/list?page=${ph.beginPage-1}&pageSize=${ph.pageSize}'/>">&lt;</a>--%>
-<%--            </c:if>--%>
-<%--            <c:forEach var="i" begin="${ph.beginPage}" end="${ph.endPage}">--%>
-<%--                <a href ="<c:url value='/board/list?page=${i}&pageSize=${ph.pageSize}'/>">${i}</a>--%>
-<%--            </c:forEach>--%>
-<%--            <c:if test="${ph.showNext}">--%>
-<%--                <a href ="<c:url value='/board/list?page=${ph.endPage+1}&pageSize=${ph.pageSize}'/>">&lt;</a>--%>
-<%--            </c:if>--%>
-<%--            <c:if test="${totalCnt!=null && totalCnt!=0}">--%>
-                <c:if test="${ph.showPrev}">
-                    <a class="page" href="<c:url value="/board/list?page=${ph.beginPage-1}"/>">&lt;</a>
-                </c:if>
+            <c:if test="${ph.showPrev}">
+                <a href ="<c:url value='/board/list?page=${ph.beginPage-1}&pageSize=${ph.pageSize}'/>">&lt;</a>
+            </c:if>
                 <c:forEach var="i" begin="${ph.beginPage}" end="${ph.endPage}">
-                    <a class="page ${i==ph.page? "paging-active" : ""}" href="<c:url value="/board/list?page=${i}"/>">${i}</a>
+                    <a href ="<c:url value='/board/list?page=${i}&pageSize=${ph.pageSize}'/>">${i}</a>
                 </c:forEach>
-                <c:if test="${ph.showNext}">
-                    <a class="page" href="<c:url value="/board/list?page=${ph.endPage+1}"/>">&gt;</a>
-                </c:if>
-<%--            </c:if>--%>
+            <c:if test="${ph.showNext}">
+                <a href ="<c:url value='/board/list?page=${ph.endPage+1}&pageSize=${ph.pageSize}'/>">&gt;</a>
+            </c:if>
         </div>
     </div>
 </body>

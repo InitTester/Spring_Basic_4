@@ -18,6 +18,22 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
+    @GetMapping("/read")
+    public String read(Integer bno,Integer page, Integer pageSize,Model m){
+        try {
+            BoardDto boardDto = boardService.read(bno);
+//            m.addAttribute("boardDto",boardDto);// 아래 문장과 동일
+            m.addAttribute(boardDto); // 타입의 첫글자를 이름으로 한다.
+            m.addAttribute("page",page);
+            m.addAttribute("pageSize",pageSize);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "board";
+    }
+
     @GetMapping("/list")
     public String list(Integer page,Integer pageSize,Model m, HttpServletRequest request) {
         System.out.println("page = " + page);
@@ -28,6 +44,9 @@ public class BoardController {
         if(page==null)page=1;
         if(pageSize==null)pageSize=10;
 
+//        System.out.println("page = " + page);
+//        System.out.println("pageSize = " + pageSize);
+
         try {
             int totalCnt = boardService.getCount();
             PageHandler pageHandler = new PageHandler(totalCnt,page,pageSize);
@@ -36,15 +55,16 @@ public class BoardController {
             map.put("offset",(page-1)*pageSize);
             map.put("pageSize",pageSize);
 
-            System.out.println("?? : " + map);
+//            System.out.println("?? : " + map);
 
             List<BoardDto> list = boardService.getPage(map);
-            System.out.println(map);
-            System.out.println("list = " + list);
+//            System.out.println(map);
+//            System.out.println("list = " + list);
 
             m.addAttribute("list",list);
             m.addAttribute("ph",pageHandler);
-
+            m.addAttribute("page", page);
+            m.addAttribute("pageSize", pageSize);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

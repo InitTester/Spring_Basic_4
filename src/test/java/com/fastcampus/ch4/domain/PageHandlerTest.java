@@ -33,4 +33,13 @@ public class PageHandlerTest {
         assertTrue(ph.endPage==26);
     }
 
+    @Test
+    public void test4() {
+        PageHandler ph = new PageHandler(255,10);
+        ph.print();
+        System.out.println("ph = " + ph);
+        assertTrue(ph.beginPage==1);
+        assertTrue(ph.endPage==10);
+    }
+
 }
