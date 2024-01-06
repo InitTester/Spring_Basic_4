@@ -18,6 +18,69 @@ public class BoardController {
     @Autowired
     BoardService boardService;
 
+    @PostMapping("/write")
+    public String write(BoardDto boardDto,Model m,HttpSession session,RedirectAttributes rattr) {
+
+        System.out.println("boardDto = " + boardDto);
+//        System.out.println("rowCnt = " + rowCnt);
+
+        String writer = (String)session.getAttribute("id");
+
+        System.out.println("writer = " + writer);
+        boardDto.setWriter(writer);
+
+        try {
+            int rowCnt = boardService.write(boardDto); // insert
+
+
+            if(rowCnt!=1)
+                throw new Exception("Write failed");
+
+//            m.addAttribute(boardDto);
+
+            rattr.addFlashAttribute("msg","WRT_OK");
+            return "redirect:/board/list";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+//            throw new RuntimeException(e);
+            m.addAttribute(boardDto);
+            m.addAttribute("msg","WRT_ERR");
+            return "board";
+        }
+    }
+
+    @GetMapping("/write")
+    public String write(Model m){
+
+        m.addAttribute("mode","new");
+        return "board"; // 읽기와 쓰기에 사용. 쓰기에 사용할때는 mode =new
+    }
+
+    @PostMapping("/remove")
+    public String remove(Integer bno,Integer page, Integer pageSize, Model m,HttpSession session,RedirectAttributes rattr){
+
+        String writer = (String)session.getAttribute("id");
+
+        try {
+           int rowCnt =  boardService.remove(bno,writer);
+
+            m.addAttribute("page",page);
+            m.addAttribute("pageSize",pageSize);
+
+            if(rowCnt!=1)
+                throw new Exception("board remove error");
+
+               rattr.addFlashAttribute("msg","DEL_OK");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            rattr.addFlashAttribute("msg","DEL_ERR");
+        }
+
+        return "redirect:/board/list";
+    }
+
     @GetMapping("/read")
     public String read(Integer bno,Integer page, Integer pageSize,Model m){
         try {
@@ -36,7 +99,7 @@ public class BoardController {
 
     @GetMapping("/list")
     public String list(Integer page,Integer pageSize,Model m, HttpServletRequest request) {
-        System.out.println("page = " + page);
+//        System.out.println("page = " + page);
 
         if(!loginCheck(request))
             return "redirect:/login/login?toURL="+request.getRequestURL();  // 로그인을 안했으면 로그인 화면으로 이동

@@ -6,10 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
 
 @Repository
@@ -61,7 +58,33 @@ public class UserDaoImpl implements UserDao {
 
         return user;
     }
+    @Override
+    public User selectUser2(String id,String pwd) throws Exception {
+        User user = null;
+        String sql = "SELECT * FROM user_info WHERE id= '"+id+"' and pwd = '"+pwd+"'";
+        System.out.println("sql = " + sql);
 
+        try (
+                Connection conn = ds.getConnection();
+                Statement stmt = conn.createStatement();
+
+        ){
+            ResultSet rs = stmt.executeQuery(sql); //  select
+
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getString(1));
+                user.setPwd(rs.getString(2));
+                user.setName(rs.getString(3));
+                user.setEmail(rs.getString(4));
+                user.setBirth(new Date(rs.getDate(5).getTime()));
+                user.setSns(rs.getString(6));
+                user.setReg_date(new Date(rs.getTimestamp(7).getTime()));
+            }
+        }
+
+        return user;
+    }
     // 사용자 정보를 user_info테이블에 저장하는 메서드
     @Override
     public int insertUser(User user) throws Exception {

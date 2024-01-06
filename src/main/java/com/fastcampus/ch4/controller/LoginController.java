@@ -74,16 +74,18 @@ public class LoginController {
         User user = null;
 
         try {
-            user = userDao.selectUser(id);
+//            user = userDao.selectUser(id);
+            user = userDao.selectUser2(id,pwd);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        return user!=null;
 
-        System.out.println("user = " + user);
+//        System.out.println("user = " + user);
 //        System.out.println("user.getPwd() = " + user.getPwd());
 
-        return user!=null && user.getPwd().equals(pwd);
+//        return user!=null && user.getPwd().equals(pwd);
 //        return "asdf".equals(id) && "1234".equals(pwd);
     }
 }
