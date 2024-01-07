@@ -52,7 +52,7 @@
         SET   title = #{title}
           , content = #{content}
           , up_date = now()
-        WHERE bno = #{bno}
+        WHERE bno = #{bno} AND writer = #{writer}
     </update>
 
     <update id="updateCommentCnt" parameterType="map">
@@ -66,5 +66,45 @@
         SET   view_cnt = view_cnt + 1
         WHERE bno = #{bno}
     </update>
+
+    <select id="searchSelectPage" parameterType="SearchCondition" resultType="BoardDto">
+        <!--        <include refid="selectFromBoard"/>-->
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
+        WHERE true
+          <choose>
+              <when test='option=="T"'>
+                  AND title LIKE concat('%', #{keyword}, '%')
+              </when>
+              <when test='option=="W"'>
+                  AND writer LIKE concat('%', #{keyword}, '%')
+              </when>
+              <otherwise>
+                  AND (title LIKE concat('%', #{keyword}, '%')
+                  or content LIKE concat('%', #{keyword}, '%'))
+              </otherwise>
+          </choose>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="searchResultCnt" parameterType="SearchCondition" resultType="int">
+        <!--        <include refid="selectFromBoard"/>-->
+        SELECT count(*)
+        FROM board
+        WHERE true
+          <choose>
+            <when test='option=="T"'>
+                AND title LIKE concat('%', #{keyword}, '%')
+            </when>
+            <when test='option=="W"'>
+                AND writer LIKE concat('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                AND (title LIKE concat('%', #{keyword}, '%')
+                or content LIKE concat('%', #{keyword}, '%'))
+            </otherwise>
+          </choose>
+    </select>
 
 </mapper>

@@ -18,6 +18,39 @@ public class BoardDaoImplTest {
     private BoardDao boardDao;
 
     @Test
+    public void searchSelectPageTest() throws Exception{
+        boardDao.deleteAll();
+        for (int i = 1; i <= 20; i++) {
+            BoardDto boardDto = new BoardDto("title" + i,"asdfffff","asdf");
+            boardDao.insert(boardDto);
+        }
+
+        SearchCondition sc = new SearchCondition(1,10,"T","title2"); // title1%
+        List<BoardDto> list = boardDao.searchSelectPage(sc);
+
+        System.out.println("list = " + list);
+
+        assertTrue(list.size()==2); // 1~20 title1%
+    }
+
+    @Test
+    public void searchResultCntTest() throws Exception{
+        boardDao.deleteAll();
+        for (int i = 1; i <= 20; i++) {
+            BoardDto boardDto = new BoardDto("title" + i,"asdfffff","asdf");
+            boardDao.insert(boardDto);
+        }
+
+        SearchCondition sc = new SearchCondition(1,10,"T","title2"); // title1%
+
+        System.out.println("::sc = " + sc);
+
+        int cnt = boardDao.searchResultCnt(sc);
+        System.out.println("::cnt = " + cnt);
+        assertTrue(cnt==2); // 1~20 title1%
+    }
+
+    @Test
     public void insertTestData() throws Exception{
         boardDao.deleteAll();
         for(int i=1; i<=220; i++){

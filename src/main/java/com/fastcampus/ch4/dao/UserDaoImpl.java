@@ -62,7 +62,7 @@ public class UserDaoImpl implements UserDao {
     public User selectUser2(String id,String pwd) throws Exception {
         User user = null;
         String sql = "SELECT * FROM user_info WHERE id= '"+id+"' and pwd = '"+pwd+"'";
-        System.out.println("sql = " + sql);
+//        System.out.println("sql = " + sql);
 
         try (
                 Connection conn = ds.getConnection();
