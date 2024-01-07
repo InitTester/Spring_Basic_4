@@ -67,33 +67,8 @@
         WHERE bno = #{bno}
     </update>
 
-    <select id="searchSelectPage" parameterType="SearchCondition" resultType="BoardDto">
-        <!--        <include refid="selectFromBoard"/>-->
-        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
-        FROM board
-        WHERE true
-          <choose>
-              <when test='option=="T"'>
-                  AND title LIKE concat('%', #{keyword}, '%')
-              </when>
-              <when test='option=="W"'>
-                  AND writer LIKE concat('%', #{keyword}, '%')
-              </when>
-              <otherwise>
-                  AND (title LIKE concat('%', #{keyword}, '%')
-                  or content LIKE concat('%', #{keyword}, '%'))
-              </otherwise>
-          </choose>
-        ORDER BY reg_date DESC, bno DESC
-        LIMIT #{offset}, #{pageSize}
-    </select>
-
-    <select id="searchResultCnt" parameterType="SearchCondition" resultType="int">
-        <!--        <include refid="selectFromBoard"/>-->
-        SELECT count(*)
-        FROM board
-        WHERE true
-          <choose>
+    <sql id ="searchCondition">
+        <choose>
             <when test='option=="T"'>
                 AND title LIKE concat('%', #{keyword}, '%')
             </when>
@@ -104,7 +79,25 @@
                 AND (title LIKE concat('%', #{keyword}, '%')
                 or content LIKE concat('%', #{keyword}, '%'))
             </otherwise>
-          </choose>
+        </choose>
+    </sql>
+
+    <select id="searchSelectPage" parameterType="SearchCondition" resultType="BoardDto">
+        <!--        <include refid="selectFromBoard"/>-->
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
+        WHERE true
+        <include refid="searchCondition"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="searchResultCnt" parameterType="SearchCondition" resultType="int">
+        <!--        <include refid="selectFromBoard"/>-->
+        SELECT count(*)
+        FROM board
+        WHERE true
+        <include refid="searchCondition"/>
     </select>
 
 </mapper>
